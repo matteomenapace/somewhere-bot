@@ -1,13 +1,23 @@
 {
-    "name": "middleOfNowhere",
-    "version": "0.0.1-master",
-    "main": "./index.js",
-    "dependencies": {
-        "random-longitude": "1.0.1",
-        "random-latitude": "1.0.1",
-        "google-panorama-tiles": "1.0.3",
-        "google-panorama-url": "1.0.0",
-        "google-panorama-by-id": "2.1.0",
-        "google-panorama-by-location": "4.1.1"
-    }
+  "name": "middleOfNowhere",
+  "version": "0.0.1-master",
+  "main": "./index.js",
+  "dependencies": {
+    "country-data": "0.0.24",
+    "google-panorama-by-id": "2.1.0",
+    "google-panorama-by-location": "4.1.1",
+    "google-panorama-tiles": "1.0.3",
+    "google-panorama-url": "1.0.0",
+    "google-translate": "^1.0.6",
+    "random-latitude": "1.0.1",
+    "random-longitude": "1.0.1",
+    "yandex-translate-api": "^1.0.1"
+  },
+  "author": "matteomenapace",
+  "description": "Postcards from the middle of nowhere",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matteomenapace/middleOfNowhere.git"
+  },
+  "license": "CC-BY-NC-4.0"
 }
