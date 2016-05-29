@@ -1,0 +1,13 @@
+{
+    "name": "middleOfNowhere",
+    "version": "0.0.1-master",
+    "main": "./index.js",
+    "dependencies": {
+        "random-longitude": "1.0.1",
+        "random-latitude": "1.0.1",
+        "google-panorama-tiles": "1.0.3",
+        "google-panorama-url": "1.0.0",
+        "google-panorama-by-id": "2.1.0",
+        "google-panorama-by-location": "4.1.1"
+    }
+}
