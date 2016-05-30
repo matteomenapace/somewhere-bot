@@ -7,11 +7,16 @@ var config = require('./config'),
     getPanoramaByID = require('google-panorama-by-id'),
     getPanoramaURL = require('google-panorama-url'),
     getPanoramaTiles = require('google-panorama-tiles'),
+    Twitter = require('twitter'),
+    twitterBot = new Twitter(config.twitterKeys),
     Jimp = require('jimp'),
     filters = require('./filters'),
+    chosenFilter = 'twoDaysAgo',
     values = ['lighten', 'brighten', 'darken', 'desaturate', 'saturate', 'greyscale', 'hue', 'tint', 'shade', 'xor', 'red', 'green', 'blue'], 
     locationAttempts = 0, // to count how many random locations we have tried before finding one that has a StreetView,
-    greetings, hashtag, tweetText // strings 
+    imageID = null,
+    tweetText = null,
+    greetings, hashtag  // strings 
 
 function getRandomLocation()
 {
@@ -27,14 +32,14 @@ function tryAndGetRandomStreetView(location)
   {
     if (err) 
     {
-      console.error(err)
+      console.error('├ ' + err)
       locationAttempts ++ // increment the attempts count
       // and try again..
       tryAndGetRandomStreetView(getRandomLocation())
     }    
     else 
     {
-      console.log('It took ' + locationAttempts + ' attempts to found one!')
+      console.log('├ It took ' + locationAttempts + ' attempts to found one!')
       // console.log(result)
       getPanoramaInfo(result)
       processPanoramaImage(result)
@@ -43,6 +48,7 @@ function tryAndGetRandomStreetView(location)
   })   
 }
 // ...and make it start
+console.log('├ Searching for a street view...')
 tryAndGetRandomStreetView(getRandomLocation())
 
 function getPanoramaImages(panorama)
@@ -82,11 +88,12 @@ function getPanoramaInfo(panorama)
       var place = result.Location.region.split(',')[0]
           
       greetings = 'Greetings from ' + place
-      console.log(greetings)
+      // console.log(greetings)
       
       hashtag = getHashtag(result.Location.country)
-      
-      translateIntoCountryLanguage(greetings, result.Location.country)
+
+      if (config.translateCaption) translateIntoCountryLanguage(greetings, result.Location.country)
+      else makeTweet(greetings + hashtag)  
     }    
   })
 }
@@ -94,7 +101,7 @@ function getPanoramaInfo(panorama)
 function translateIntoCountryLanguage(text, countryName)
 {
   var country = countryLookup.countries({name: countryName})[0]
-  console.log(country)
+  // console.log(country)
   var options = country ? {to: country.languages[0]} : {to: countryName.toLowerCase().substring(0, 3)} 
   // if the country can't be found, pick the first 3 letters from its name
   
@@ -102,15 +109,14 @@ function translateIntoCountryLanguage(text, countryName)
   {
     if (err) 
     {
-      console.error(err)
-      tweetText = greetings + hashtag
+      console.error('├ ' + err)
+      makeTweet(greetings + hashtag)
     }    
     else
     {
       console.log(res)
-      tweetText = res.text[0] + hashtag  
+      makeTweet(res.text[0] + hashtag)  
     }
-    console.log('TWEET > ' + tweetText)
   })
 }
 
@@ -126,23 +132,38 @@ function processPanoramaImage(panorama)
 
   Jimp.read(url).then(function (image) 
   {
-    image.write( 'test-images/' + generateFileName( [panorama.id] ) )
-
-    for (var filterName in filters)
-    {
-      var filter = filters[filterName],
-          newImage = image.clone()
-      
-      console.log(filterName, filter)
-
-      if (filter.brightness) newImage.brightness(filter.brightness)
-      if (filter.contrast) newImage.contrast(filter.contrast)
-
-      var colorArray = getColorArray(filter)
-      if (colorArray.length > 0) newImage.color(colorArray)
+    var filter = filters[chosenFilter],
+        newImage = image.clone()
     
-      newImage.write( 'test-images/' + generateFileName( [panorama.id, filterName] ) )
-    }
+    // console.log(chosenFilter, filter)
+
+    if (filter.brightness) newImage.brightness(filter.brightness)
+    if (filter.contrast) newImage.contrast(filter.contrast)
+
+    var colorArray = getColorArray(filter)
+    if (colorArray.length > 0) newImage.color(colorArray)
+
+    tweetImage(newImage)
+
+    /*
+      image.write( 'test-images/' + generateFileName( [panorama.id] ) )
+
+      for (var filterName in filters)
+      {
+        var filter = filters[filterName],
+            newImage = image.clone()
+        
+        console.log(filterName, filter)
+
+        if (filter.brightness) newImage.brightness(filter.brightness)
+        if (filter.contrast) newImage.contrast(filter.contrast)
+
+        var colorArray = getColorArray(filter)
+        if (colorArray.length > 0) newImage.color(colorArray)
+      
+        newImage.write( 'test-images/' + generateFileName( [panorama.id, filterName] ) )
+      }
+    */
   }).catch(function (err) 
   {
     console.error(err)
@@ -169,4 +190,68 @@ function getColorArray(filter)
 
   // console.log(colorArray)
   return colorArray
+}
+
+function tweetImage(image)
+{
+  /*image.getBuffer( Jimp.MIME_JPEG, function(buffer)
+  {
+    // is buffer the actual thing passed in here?
+  })*/
+
+  twitterBot.post('media/upload', {media: image.bitmap.data}, function(error, media, response) 
+  {
+    if (error)
+    {
+      console.error(error)
+    }
+    else  
+    {
+      console.log(media)
+
+      imageID = media.media_id_string
+
+      makeTweet()
+    }
+  })
+}
+
+function makeTweet(text) 
+{
+  if (text) tweetText = text
+
+  if (!imageID) 
+  {
+    console.log('├ Image not ready yet') 
+    return
+  }  
+  if (!tweetText)
+  {
+    console.log('├ Tweet text not ready yet') 
+    return
+  }    
+
+  console.log('├ TWEET > ' + tweetText)   
+
+  if (config.testMode) 
+  {
+    console.log('├ In test mode, exiting...')
+    return
+  }  
+
+  var status = 
+  {
+    status: tweetText,
+    media_ids: imageID // Pass the media id string
+  }
+
+  twitterBot.post('statuses/update', status,  function(error, tweet, response)
+  {
+    if (error) console.error(error)
+    else
+    {
+      console.log('├ DONE! ' + tweet.text) 
+      // console.log(response)
+    } 
+  })
 }
