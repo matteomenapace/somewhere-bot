@@ -21,7 +21,7 @@ module.exports =
     contrast: 0.5,
     red: 15
   },
-  nashville:
+  twoDaysAgo:
   {
     brightness: 0.05,
     contrast: 0.5,
