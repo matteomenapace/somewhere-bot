@@ -7,6 +7,9 @@ var config = require('./config'),
     getPanoramaByID = require('google-panorama-by-id'),
     getPanoramaURL = require('google-panorama-url'),
     getPanoramaTiles = require('google-panorama-tiles'),
+    Jimp = require('jimp'),
+    filters = require('./filters'),
+    values = ['lighten', 'brighten', 'darken', 'desaturate', 'saturate', 'greyscale', 'hue', 'tint', 'shade', 'xor', 'red', 'green', 'blue'], 
     locationAttempts = 0, // to count how many random locations we have tried before finding one that has a StreetView,
     greetings, hashtag, tweetText // strings 
 
@@ -34,6 +37,7 @@ function tryAndGetRandomStreetView(location)
             console.log('It took ' + locationAttempts + ' attempts to found one!')
             // console.log(result)
             getPanoramaInfo(result)
+            processPanoramaImage(result)
             // getPanoramaImages(result)
         }
     })   
@@ -68,22 +72,18 @@ function getPanoramaImages(panorama)
 
 function getPanoramaInfo(panorama)
 {
-    var url = 'https://geo0.ggpht.com/cbk?cb_client=maps_sv.tactile&authuser=0&hl=en&panoid=' + panorama.id + '&output=tile&x=' + config.x + '&y=' + config.y + '&zoom=' + config.zoom + '&nbt&fover=2';   
-
-    console.log(url)
-
-    getPanoramaByID(panorama.id, function (err, result) 
+  getPanoramaByID(panorama.id, function (err, result) 
+  {
+    if (err) throw err
+    else 
     {
-        if (err) throw err
-        else 
-        {
-            console.log(result.Location)
-            greetings = 'Greetings from ' + result.Location.region,
-            hashtag = getHashtag(result.Location.country)
-            console.log(greetings)
-            translateIntoCountryLanguage(greetings, result.Location.country)
-        }    
-    })
+      console.log(result.Location)
+      greetings = 'Greetings from ' + result.Location.region,
+      hashtag = getHashtag(result.Location.country)
+      console.log(greetings)
+      translateIntoCountryLanguage(greetings, result.Location.country)
+    }    
+  })
 }
 
 function translateIntoCountryLanguage(text, countryName)
@@ -112,4 +112,61 @@ function translateIntoCountryLanguage(text, countryName)
 function getHashtag(string)
 {
     return ' #' + string.replace(/\s/g, '') // no spaces in hashtags
+}
+
+function processPanoramaImage(panorama)
+{
+  var url = 'https://geo0.ggpht.com/cbk?cb_client=maps_sv.tactile&authuser=0&hl=en&panoid=' + panorama.id + '&output=tile&x=' + config.x + '&y=' + config.y + '&zoom=' + config.zoom + '&nbt&fover=2'
+  console.log(url)
+
+  Jimp.read(url).then(function (image) 
+  {
+    image.write( 'test-images/' + generateFileName( [panorama.id] ) )
+
+    for (var filterName in filters)
+    {
+      var filter = filters[filterName],
+          newImage = image.clone()
+      
+      console.log(filterName, filter)
+
+      if (filter.brightness) newImage.brightness(filter.brightness)
+      if (filter.contrast) newImage.contrast(filter.contrast)
+      
+      // TODO sepia
+
+      // TODO Instagram filters
+      // newImage.filter(filterName)
+
+      var colorArray = getColorArray(filter)
+      if (colorArray.length > 0) newImage.color(colorArray)
+    
+      newImage.write( 'test-images/' + generateFileName( [panorama.id, filterName] ) )
+    }
+  }).catch(function (err) 
+  {
+    console.error(err)
+  }) 
+}
+
+function generateFileName(chunks)
+{
+  return chunks.join('-') + '.jpg'
+}
+
+function getColorArray(filter)
+{
+  var colorArray = []
+
+  values.forEach(function (value)
+  {
+    // console.log(value + ' > ' + filter[value])
+    if (filter[value] != undefined)
+    {
+      colorArray.push({ apply:value, params:[ filter[value] ] })
+    } 
+  })
+
+  // console.log(colorArray)
+  return colorArray
 }
