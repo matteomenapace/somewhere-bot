@@ -23,11 +23,26 @@ module.exports =
   },
   nashville:
   {
-    brightness: 0.1,
-    contrast: 0.55,
-    red: 33,
-    blue: 10,
-    green: 28,
-    shade: 1
+    brightness: 0.05,
+    contrast: 0.5,
+    red: 38,
+    blue: 12,
+    green: 33,
+    saturate: 3,
+    shade: 2
+  },
+  blackAndWhite:
+  {
+    brightness: 0.2,
+    contrast: 0.65,
+    greyscale: 10
+  },
+  backThen:
+  {
+    brightness: 0.2,
+    contrast: 0.65,
+    greyscale: 10,
+    red: 30,
+    green: 25
   }
 }
