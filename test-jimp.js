@@ -2,42 +2,9 @@ var Jimp = require('jimp'),
 		Lagrange = require('./lagrange'),
 		timestamp = require('unix-timestamp'),
 		// imageURL from Google StreetView, panoID eZ-muprTwdLqAbBcj8EIGg 
-		imageURL = 'test-images/_brazil.jpg',
+		imageURL = 'test-images/_snow-somewhere.jpg',
+		filters = require('./filters'),
 		values = ['lighten', 'brighten', 'darken', 'desaturate', 'saturate', 'greyscale', 'hue', 'tint', 'shade', 'xor', 'red', 'green', 'blue'] 
-
-var filters =
-{
-	/*rina:
-	{
-		contrast: 0.23
-	},
-	nadia:
-	{
-		contrast: 0.53,
-		hue: 13,
-	},
-	nostalgia:
-	{
-		brightness: 0.1,
-		contrast: 0.5,
-		saturate: -15,
-	},
-	sunrise:
-	{
-		brightness: 0.1,
-		contrast: 0.5,
-		red: 15
-	},*/
-	nashville:
-	{
-		brightness: 0.1,
-		contrast: 0.55,
-		red: 33,
-		blue: 10,
-		green: 28,
-		shade: 1
-	}
-}
 
 /*filters.ludwig =
 {
@@ -109,11 +76,6 @@ Jimp.read(imageURL).then(function (image)
 
 		if (filter.brightness) newImage.brightness(filter.brightness)
 		if (filter.contrast) newImage.contrast(filter.contrast)
-		
-		// TODO sepia
-
-		// TODO Instagram filters
-		// newImage.filter(filterName)
 
 		var colorArray = getColorArray(filter)
 		if (colorArray.length > 0) newImage.color(colorArray)
