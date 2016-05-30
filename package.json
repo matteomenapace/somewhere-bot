@@ -9,8 +9,10 @@
     "google-panorama-tiles": "1.0.3",
     "google-panorama-url": "1.0.0",
     "google-translate": "^1.0.6",
+    "jimp": "^0.2.24",
     "random-latitude": "1.0.1",
     "random-longitude": "1.0.1",
+    "unix-timestamp": "^0.2.0",
     "yandex-translate-api": "^1.0.1"
   },
   "author": "matteomenapace",
