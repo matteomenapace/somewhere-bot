@@ -115,7 +115,7 @@ This means that instead of running your bot from the Terminal on your computer, 
 	
 	Click `Add new job`.
 	
-	In the filed that starts with `$` type in `node bot.js`
+	In the filed that starts with `$` type in `node index.js`
 	
 	The rest is kind of self-explanatory (if you've got so far!).	 
 	
