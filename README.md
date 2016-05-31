@@ -6,8 +6,8 @@ A bot on a roadtrip, tweeting postcards from the places it visits every day.
 
 - [x] `Greetings from {region} #{country}` to gain social media juice
 - [x] Have a variety of Tweet starters, not just `Greetings`
-- [ ] Tweet coordinates?
-- [x] Photo filters? 
+- [x] Tweet coordinates
+- [x] Photo filters
     * [Caman](http://camanjs.com) is throwing tantrums when installing (something to do with `node-gyp`)
     * Using [Jimp](https://www.npmjs.com/package/jimp) instead
 - [ ] Adjust photo URL depending on `zoomLevels`
