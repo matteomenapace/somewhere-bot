@@ -14,6 +14,10 @@ A bot on a roadtrip, tweeting postcards from the places it visits every day.
 - [ ] Patch together multiple tiles for a higher photo res?
 - [ ] Detect people in photo tiles (portraits in a landscape...)
 - [ ] `Yandex.translate` stopped working, let's bypass it for now
+- [ ] Remove `District` from `{region}`
+- [ ] Mention `@visit{country}`?
+- [ ] Replace `United States` with `USA` (better hashtag?) etc.
+- [ ] Like _similar_ pictures from the place we tweet about? 
 
 ## Get started
 
