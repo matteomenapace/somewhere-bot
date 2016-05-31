@@ -44,7 +44,7 @@ function tryAndGetRandomStreetView(location)
     }    
     else 
     {
-      console.log('├ It took ' + locationAttempts + ' attempts to found one!')
+      console.log('├ It took ' + locationAttempts + ' attempts to find one!')
       console.log(result)
       latitude = result.latitude
       longitude = result.longitude   
