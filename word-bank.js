@@ -20,8 +20,12 @@ module.exports =
 		'Every moment is beautiful in ',
 		'Loitering in ',
 		'Lurking around ',
-		'A little lost in ',
+		'Lost in ',
 		// 'Seeking the best pizza in ',
 		'Letting it all go in '
+	],
+	blacklist:
+	[
+		'District'
 	]
 }
