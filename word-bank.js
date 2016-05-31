@@ -21,7 +21,7 @@ module.exports =
 		'Loitering in ',
 		'Lurking around ',
 		'A little lost in ',
-		'Seeking the best pizza in ',
+		// 'Seeking the best pizza in ',
 		'Letting it all go in '
 	]
 }
