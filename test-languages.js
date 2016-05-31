@@ -1,8 +1,8 @@
 var config = require('./config'),
     translator = require('yandex-translate-api')(config.yandexKey),
     countryLookup = require('country-data').lookup,
-    greetings = 'Greetings from #London',
-    name = 'Russia',
+    greetings = 'Meditating in Beja #Portugal',
+    name = 'Portugal',
     country = countryLookup.countries({name: name})[0],
 		options = country ? {to: country.languages[0]} : {to: name.toLowerCase().substring(0, 3)}
 

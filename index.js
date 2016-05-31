@@ -108,11 +108,18 @@ function getPanoramaInfo(panorama)
 
 function translateIntoCountryLanguage(text, countryName)
 {
-  var country = countryLookup.countries({name: countryName})[0]
-  // console.log(country)
-  var options = country ? {to: country.languages[0]} : {to: countryName.toLowerCase().substring(0, 3)} 
-  // if the country can't be found, pick the first 3 letters from its name
-  
+  var country = countryLookup.countries({name: countryName})[0],
+      language = country ? country.languages[0] : countryName.toLowerCase().substring(0, 3), // if the country can't be found, pick the first 3 letters from its name
+      options = {to: language} 
+
+  if (language == 'eng') // no need to translate from English...
+  {
+    makeTweet(greetings + hashtag)
+    return
+  }  
+
+  console.log('├ translateIntoCountryLanguage > ' + text + ' > ' + language)
+
   translator.translate(text, options, function(err, res) 
   {
     if (err) 
