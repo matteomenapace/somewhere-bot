@@ -18,6 +18,8 @@ var config = require('./config'),
     locationAttempts = 0, // to count how many random locations we have tried before finding one that has a StreetView,
     imageID = null,
     tweetText = null,
+    latitude = null,
+    longitude = null,
     wordBank = require('./word-bank'),
     greetings, hashtag  // strings 
 
@@ -43,7 +45,9 @@ function tryAndGetRandomStreetView(location)
     else 
     {
       console.log('├ It took ' + locationAttempts + ' attempts to found one!')
-      // console.log(result)
+      console.log(result)
+      latitude = result.latitude
+      longitude = result.longitude   
       getPanoramaInfo(result)
       processPanoramaImage(result)
       // getPanoramaImages(result)
@@ -225,8 +229,11 @@ function makeTweet(text)
 
   var status = 
   {
+    lat: latitude,
+    lon: longitude,
+    display_coordinates: true,
     status: tweetText,
-    media_ids: imageID // Pass the media id string
+    media_ids: imageID
   }
 
   twitterBot.post('statuses/update', status,  function(error, tweet, response)
