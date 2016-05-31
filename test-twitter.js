@@ -31,25 +31,29 @@ Jimp.read(imageURL).then(function (image)
   console.error(err)
 }) 
 
-
-
 function tweetImage(image)
 {
-  twitterBot.post('media/upload', {media: image.bitmap.data}, function(error, media, response) 
+  console.log(image.bitmap.data)
+  // console.log(image.buffer) // undefined
+
+  image.getBuffer( Jimp.MIME_JPEG, function(error, buffer)
   {
-    if (error)
-    {
-      console.error('media/upload fail...')
-      console.error(error)
-    }
-    else  
-    {
-      console.log(media)
+    console.log(buffer)
 
-      imageID = media.media_id_string
-
-      makeTweet()
-    }
+    twitterBot.post('media/upload', {media:buffer}, function(error, media, response) 
+    {
+      if (error)
+      {
+        console.error('media/upload fail...')
+        console.error(error)
+      }
+      else  
+      {
+        console.log(media)
+        imageID = media.media_id_string
+        makeTweet()
+      }
+    })
   })
 }
 

@@ -3,6 +3,8 @@ var config = require('./config'),
     countryLookup = require('country-data').lookup,
     randomLatitude = require('random-latitude'),
     randomLongitude = require('random-longitude'),
+    Random = require('random-js'),
+    random = new Random(Random.engines.mt19937().autoSeed()),
     getPanoramaByLocation = require('google-panorama-by-location'),
     getPanoramaByID = require('google-panorama-by-id'),
     getPanoramaURL = require('google-panorama-url'),
@@ -16,6 +18,7 @@ var config = require('./config'),
     locationAttempts = 0, // to count how many random locations we have tried before finding one that has a StreetView,
     imageID = null,
     tweetText = null,
+    wordBank = require('./word-bank'),
     greetings, hashtag  // strings 
 
 function getRandomLocation()
@@ -85,9 +88,10 @@ function getPanoramaInfo(panorama)
     {
       console.log(result.Location)
       
+      var starter = random.pick(wordBank.starters)
       var place = result.Location.region.split(',')[0]
-          
-      greetings = 'Greetings from ' + place
+
+      greetings = starter + place
       // console.log(greetings)
       
       hashtag = getHashtag(result.Location.country)
@@ -145,25 +149,6 @@ function processPanoramaImage(panorama)
 
     tweetImage(newImage)
 
-    /*
-      image.write( 'test-images/' + generateFileName( [panorama.id] ) )
-
-      for (var filterName in filters)
-      {
-        var filter = filters[filterName],
-            newImage = image.clone()
-        
-        console.log(filterName, filter)
-
-        if (filter.brightness) newImage.brightness(filter.brightness)
-        if (filter.contrast) newImage.contrast(filter.contrast)
-
-        var colorArray = getColorArray(filter)
-        if (colorArray.length > 0) newImage.color(colorArray)
-      
-        newImage.write( 'test-images/' + generateFileName( [panorama.id, filterName] ) )
-      }
-    */
   }).catch(function (err) 
   {
     console.error(err)
@@ -194,25 +179,24 @@ function getColorArray(filter)
 
 function tweetImage(image)
 {
-  /*image.getBuffer( Jimp.MIME_JPEG, function(buffer)
+  image.getBuffer( Jimp.MIME_JPEG, function(error, buffer)
   {
-    // is buffer the actual thing passed in here?
-  })*/
+    console.log(buffer)
 
-  twitterBot.post('media/upload', {media: image.bitmap.data}, function(error, media, response) 
-  {
-    if (error)
+    twitterBot.post('media/upload', {media:buffer}, function(error, media, response) 
     {
-      console.error(error)
-    }
-    else  
-    {
-      console.log(media)
-
-      imageID = media.media_id_string
-
-      makeTweet()
-    }
+      if (error)
+      {
+        console.error('media/upload fail...')
+        console.error(error)
+      }
+      else  
+      {
+        console.log(media)
+        imageID = media.media_id_string
+        makeTweet()
+      }
+    })
   })
 }
 
