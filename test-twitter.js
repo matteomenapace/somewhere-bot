@@ -1,12 +1,14 @@
 var config = require('./config'),
+    EmojiData = require('emoji-data'),
     Twitter = require('twitter'),
     twitterBot = new Twitter(config.twitterKeys),
     Jimp = require('jimp'),
     imageURL = 'test-images/test.jpg',
     imageID = null,
-    tweetText = 'Testing from Living Room #London'
+    emojiFlag = EmojiData.from_unified('1F1EC-1F1E7')
+    tweetText = 'Testing from #London ' + emojiFlag.render()
 
-/*
+
 twitterBot.post('statuses/update', {status: tweetText},  function(error, tweet, response)
 {
   if (error) 
@@ -20,9 +22,9 @@ twitterBot.post('statuses/update', {status: tweetText},  function(error, tweet, 
     // console.log(response)
   } 
 })
-*/
 
 
+/*
 Jimp.read(imageURL).then(function (image) 
 {
   tweetImage(image)
@@ -74,11 +76,11 @@ function makeTweet(text)
 
   console.log('├ TWEET > ' + tweetText)   
 
-  /*if (config.testMode) 
-  {
-    console.log('├ In test mode, exiting...')
-    return
-  } */ 
+  // if (config.testMode) 
+  // {
+  //   console.log('├ In test mode, exiting...')
+  //   return
+  // } 
 
   var status = 
   {
@@ -100,3 +102,4 @@ function makeTweet(text)
     } 
   })
 }   
+*/

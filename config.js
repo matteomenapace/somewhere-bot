@@ -12,6 +12,6 @@ module.exports =
   x: 3, // with zoom=3 there are 6 columns, x=3 gives you the "back of the Google Car" view
   y: 1, // with zoom=3 there are 3 rows, y=1 gives you a good balance (not too much sky, not too much road)
 
-  translateCaption: false,
+  translateGreetings: false,
 	testMode: false // if true, the bot will generate images and , but WON'T tweet anything
 }
