@@ -1,35 +1,40 @@
 var tracery = require('tracery-grammar'),
-    pronouncing = require('pronouncing'),
+    // pronouncing = require('pronouncing'),
     vocabulary = require('./vocabulary')
 
-var grammar = tracery.createGrammar(
+var rules = 
 {
-  // 'emotion': vocabulary.emotion,
   'encouraging': vocabulary.encouraging,
   'weather': vocabulary.weather,
   'surface': vocabulary.surface,
   'verbing': vocabulary.verbing,
   'me': ['[sentence:I am][punctuation:.]', '[sentence:I feel][punctuation:.]', '[sentence:am I][punctuation:?]'],
   'you': ['[sentence:you seem][punctuation:.]', '[sentence:are you][punctuation:?]', '[sentence:you are][punctuation:.]'],
+}
 
-  'phrase':
+function generate(inputs)
+{
+	var origin =
   [
     'I feel like #weather# #surface#.', // metaphor
-    // 'This place is #encouraging#', // encouraging
     '[#me#]#sentence.capitalize# #weather##punctuation#', // me
     '[#you#]#sentence.capitalize# #weather##punctuation#', // you
     '[#me#]#sentence.capitalize# #weather##punctuation# [#you#]#sentence.capitalize# #weather##punctuation#', // me and you
     '[#you#]#sentence.capitalize# #weather##punctuation# [#me#]#sentence.capitalize# #weather##punctuation#', // you and me
-    // '#phrase# #phrase#' // repeat :)
-  ],
+  ]
 
-  'origin':['#phrase#']
-})
+	if (inputs.place) // if there's a place, let's add an expansion for it
+	{
+		origin.push(inputs.place + ' is #encouraging#.')
+	}	
 
-grammar.addModifiers(tracery.baseEngModifiers)
+	rules.origin = origin
 
-function generate(inputs)
-{
+	// console.log(rules)
+
+	var grammar = tracery.createGrammar(rules)
+	grammar.addModifiers(tracery.baseEngModifiers)
+
 	var text = grammar.flatten('#origin#')/*,
       words = text.split(' '),
       lastWord = words[words.length - 1],
