@@ -1,10 +1,12 @@
 var config = require('./config'),
+    copyWriter = require('./CopyWriter'),
+    wordBank = require('./word-bank'),
     translator = require('yandex-translate-api')(config.yandexKey),
     countryLookup = require('country-data').lookup,
     randomLatitude = require('random-latitude'),
     randomLongitude = require('random-longitude'),
-    Random = require('random-js'),
-    random = new Random(Random.engines.mt19937().autoSeed()),
+    // Random = require('random-js'),
+    // random = new Random(Random.engines.mt19937().autoSeed()),
     getPanoramaByLocation = require('google-panorama-by-location'),
     getPanoramaByID = require('google-panorama-by-id'),
     getPanoramaURL = require('google-panorama-url'),
@@ -20,7 +22,6 @@ var config = require('./config'),
     tweetText = null,
     latitude = null,
     longitude = null,
-    wordBank = require('./word-bank'),
     greetings, hashtag  // strings 
 
 function getRandomLocation()
@@ -91,22 +92,22 @@ function getPanoramaInfo(panorama)
     else 
     {
       console.log(result.Location)
-      
-      var starter = random.pick(wordBank.starters)
+
+      var country = result.Location.country
       var place = result.Location.region.split(',')[0]
 
-      greetings = starter + place
-      // console.log(greetings)
-      
-      hashtag = getHashtag(result.Location.country)
+      greetings = copyWriter.generate({place: place}) 
+      console.log(greetings)
 
-      if (config.translateCaption) translateIntoCountryLanguage(greetings, result.Location.country)
+      hashtag = getHashtag(country)
+
+      if (config.translateCaption) translateIntoCountryLanguage(greetings, country)
       else makeTweet(greetings + hashtag)  
-    }    
+    }
   })
 }
 
-function translateIntoCountryLanguage(text, countryName)
+function translateIntoCountryLanguage(string, countryName)
 {
   var country = countryLookup.countries({name: countryName})[0],
       language = country ? country.languages[0] : countryName.toLowerCase().substring(0, 3), // if the country can't be found, pick the first 3 letters from its name
@@ -118,9 +119,9 @@ function translateIntoCountryLanguage(text, countryName)
     return
   }  
 
-  console.log('├ translateIntoCountryLanguage > ' + text + ' > ' + language)
+  console.log('├ translateIntoCountryLanguage > ' + string + ' > ' + language)
 
-  translator.translate(text, options, function(err, res) 
+  translator.translate(string, options, function(err, res) 
   {
     if (err) 
     {
