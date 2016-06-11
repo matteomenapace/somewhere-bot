@@ -1,6 +1,5 @@
 var config = require('./config'),
     copyWriter = require('./CopyWriter'),
-    wordBank = require('./word-bank'),
     translator = require('yandex-translate-api')(config.yandexKey),
     countryLookup = require('country-data').lookup,
     randomLatitude = require('random-latitude'),
