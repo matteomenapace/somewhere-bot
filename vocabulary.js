@@ -56,7 +56,7 @@ module.exports =
     'wondrous'
   ],
   
-  'weatherAdjective':
+  'weather':
   [
     'clear',
     'hazy',
@@ -90,16 +90,22 @@ module.exports =
     'blusterous',
     'harsh',
     'sultry',
-    'heavy',
+    // 'heavy',
     // 'variable',
     'thundery',
     'scattered',
     'floody',
     'unsettled',
-    'cooler'
+    'torrid',
+    'boiling',
+    'tropical',
+    'blistering',
+    'chilly',
+    'nippy',
+    // 'cooler'
   ],
   
-  'surface': 'cement stone asphalt concrete mud sand gravel'.split(' '),
+  'surface': 'cement stone rock asphalt tarmac macadam concrete mud sand gravel'.split(' '),
   
   'verbing': 
   [
