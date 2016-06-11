@@ -7,13 +7,18 @@ A bot on a roadtrip, tweeting postcards from the places it visits every day.
 - [x] `Greetings from {region} #{country}` to gain social media juice
 - [x] Have a variety of Tweet starters, not just `Greetings`
 - [x] Tweet coordinates
-- [x] Photo filters
+- [x] Photo filters 
     * [Caman](http://camanjs.com) is throwing tantrums when installing (something to do with `node-gyp`)
     * Using [Jimp](https://www.npmjs.com/package/jimp) instead
 - [ ] Adjust photo URL depending on `zoomLevels`
 - [ ] Patch together multiple tiles for a higher photo res?
 - [ ] Detect people in photo tiles (portraits in a landscape...)
-- [ ] `Yandex.translate` stopped working, let's bypass it for now
+- [x] To translate or not to translate?
+- [ ] Remove `District` from `{region}`
+- [ ] Mention `@visit{country}`?
+- [ ] Replace `United States` with `USA` (better hashtag?) etc.
+- [ ] Like _similar_ pictures from the place we tweet about? 
+- [x] Weather-inspired feelings using [Tracery](https://github.com/v21/tracery) 
 
 ## Get started
 
