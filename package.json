@@ -4,6 +4,7 @@
   "main": "./index.js",
   "dependencies": {
     "country-data": "0.0.24",
+    "emoji-data-2016": "^0.2.4",
     "google-panorama-by-id": "2.1.0",
     "google-panorama-by-location": "4.1.1",
     "google-panorama-tiles": "1.0.3",

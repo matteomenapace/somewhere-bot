@@ -1,5 +1,6 @@
 var config = require('./config'),
     copyWriter = require('./CopyWriter'),
+    emojiConverter = require('./EmojiConverter'),
     translator = require('yandex-translate-api')(config.yandexKey),
     countryLookup = require('country-data').lookup,
     randomLatitude = require('random-latitude'),
@@ -21,7 +22,10 @@ var config = require('./config'),
     tweetText = null,
     latitude = null,
     longitude = null,
-    greetings, hashtag  // strings 
+    country = null,
+    place = null,
+    emoji = null,
+    greetings, hashtag
 
 function getRandomLocation()
 {
@@ -92,16 +96,25 @@ function getPanoramaInfo(panorama)
     {
       console.log(result.Location)
 
-      var country = result.Location.country
-      var place = result.Location.region.split(',')[0]
+      country = result.Location.country
+      place = result.Location.region.split(',')[0]
 
       greetings = copyWriter.generate({place: place}) 
       console.log(greetings)
 
       hashtag = getHashtag(country)
 
-      if (config.translateCaption) translateIntoCountryLanguage(greetings, country)
-      else makeTweet(greetings + hashtag)  
+      emoji = emojiConverter.getEmoji(country)
+
+      tweetText = greetings
+      if (emoji) tweetText += ' ' + emoji.render()
+      else  tweetText += hashtag  
+      makeTweet()  
+
+      /*
+      if (config.translateGreetings) translateIntoCountryLanguage(greetings, country)
+      else makeTweet(greetings + hashtag)
+      */  
     }
   })
 }

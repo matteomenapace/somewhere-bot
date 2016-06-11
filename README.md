@@ -19,6 +19,7 @@ A bot on a roadtrip, tweeting postcards from the places it visits every day.
 - [ ] Replace `United States` with `USA` (better hashtag?) etc.
 - [ ] Like _similar_ pictures from the place we tweet about? 
 - [x] Weather-inspired feelings using [Tracery](https://github.com/v21/tracery) 
+- [x] Emoji-flags :tada:
 
 ## Get started
 
