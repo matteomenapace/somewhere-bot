@@ -16,6 +16,8 @@
     "google-panorama-url": "1.0.0",
     "google-translate": "^1.0.6",
     "jimp": "^0.2.24",
+    "pronouncing": "github:aparrish/pronouncingjs",
+    "random-js": "^1.0.8",
     "jsonfile": "^2.4.0",
     "markovchain": "^1.0.2",
     "minimist": "^1.2.0",
