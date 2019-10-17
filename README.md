@@ -1,6 +1,6 @@
 # Postcards from the middle of nowhere
 
-A bot on a roadtrip, tweeting postcards from the places it visits every day https://twitter.com/SomeWhereBot
+A bot on a roadtrip, tweeting postcards from the places it visits every day.
 
 ## Get started
 
